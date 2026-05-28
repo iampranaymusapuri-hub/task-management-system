@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Management Dashboard</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      background:#f4f6f9;
+    }
+
+    /* HEADER */
+
+    .header{
+      width:100%;
+      background:#007bff;
+      color:white;
+      padding:15px 30px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .header h2{
+      font-size:24px;
+    }
+
+    .dashboard-logo{
+  width:45px;
+  height:45px;
+  object-fit:contain;
+  background:white;
+  border-radius:50%;
+  padding:5px;
+}
+    .logout-btn{
+      background:white;
+      color:#007bff;
+      border:none;
+      padding:8px 15px;
+      border-radius:5px;
+      cursor:pointer;
+      font-weight:bold;
+    }
+
+    /* SIDEBAR */
+
+    .container{
+      display:flex;
+      height:calc(100vh - 70px);
+    }
+
+    .sidebar{
+      width:220px;
+      background:#343a40;
+      padding-top:20px;
+    }
+
+    .sidebar ul{
+      list-style:none;
+    }
+
+    .sidebar ul li{
+      padding:15px 20px;
+      border-bottom:1px solid #495057;
+    }
+
+    .sidebar ul li a{
+      color:white;
+      text-decoration:none;
+      display:block;
+    }
+
+    .sidebar ul li:hover{
+      background:#495057;
+      cursor:pointer;
+    }
+
+    /* CONTENT AREA */
+
+    .content{
+      flex:1;
+      padding:30px;
+    }
+
+    .card{
+      background:white;
+      padding:25px;
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card h3{
+      margin-bottom:20px;
+      color:#333;
+    }
+
+    .task-form{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:20px;
+    }
+
+    .form-group{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .form-group label{
+      margin-bottom:5px;
+      font-weight:bold;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select{
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:5px;
+    }
+
+    textarea{
+      resize:none;
+      height:80px;
+    }
+
+    .full-width{
+      grid-column:1 / 3;
+    }
+
+    .btn-group{
+      margin-top:20px;
+    }
+
+    .btn{
+      padding:10px 20px;
+      border:none;
+      border-radius:5px;
+      color:white;
+      cursor:pointer;
+      margin-right:10px;
+      font-size:15px;
+    }
+
+    .add-btn{
+      background:green;
+    }
+
+    .modify-btn{
+      background:orange;
+    }
+
+    .delete-btn{
+      background:red;
+    }
+
+    .search-bar{
+
+  width:100%;
+  padding:12px;
+
+  margin-bottom:20px;
+
+  border:1px solid #ccc;
+
+  border-radius:8px;
+
+  font-size:16px;
+
+  outline:none;
+
+}
+
+.search-bar:focus{
+
+  border-color:#007bff;
+
+  box-shadow:0 0 5px rgba(0,123,255,0.3);
+
+}
+.task-header{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:20px;
+
+  gap:20px;
+
+}
+
+.search-bar{
+
+  width:350px;
+
+  padding:10px 15px;
+
+  border:1px solid #ccc;
+
+  border-radius:8px;
+
+  font-size:15px;
+
+  outline:none;
+
+}
+
+.search-bar:focus{
+
+  border-color:#007bff;
+
+  box-shadow:0 0 5px rgba(0,123,255,0.3);
+
+}
+.table-edit-btn{
+
+  background:#ffc107;
+
+  color:black;
+
+  border:none;
+
+  padding:8px 12px;
+
+  border-radius:5px;
+
+  cursor:pointer;
+
+  margin-right:5px;
+
+}
+
+.table-delete-btn{
+
+  background:#dc3545;
+
+  color:white;
+
+  border:none;
+
+  padding:8px 12px;
+
+  border-radius:5px;
+
+  cursor:pointer;
+
+}
+
+.message-box{
+
+  position:fixed;
+
+  top:20px;
+
+  right:20px;
+
+  background:#28a745;
+
+  color:white;
+
+  padding:15px 25px;
+
+  border-radius:8px;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+
+  display:none;
+
+  z-index:9999;
+
+  animation:slideIn 0.4s ease;
+
+}
+
+@keyframes slideIn{
+
+  from{
+
+    transform:translateX(100%);
+    opacity:0;
+
+  }
+
+  to{
+
+    transform:translateX(0);
+    opacity:1;
+
+  }
+
+}
+.overview-card{
+
+  background:white;
+
+  padding:25px;
+
+  border-radius:10px;
+
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+
+  margin:20px;
+
+}
+.content{
+
+  flex:1;
+
+  padding:30px;
+
+  overflow-x:auto;
+
+}
+
+.card{
+
+  width:100%;
+
+  overflow-x:auto;
+
+}
+
+table{
+
+  width:100%;
+
+  border-collapse:collapse;
+
+  table-layout:auto;
+
+}
+
+th, td{
+
+  padding:12px;
+
+  border:1px solid #ddd;
+
+  word-break:break-word;
+
+}
+
+.task-form{
+
+  display:grid;
+
+  grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+
+  gap:20px;
+
+}
+  </style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+  <div class="header-left">
+
+    <img src="logo.png" class="dashboard-logo">
+
+    <h2>Task Management System</h2>
+
+  </div>
+
+  <button
+  class="logout-btn"
+  onclick="logout()">
+
+  Logout
+
+</button>
+
+</div>
+
+  <!-- MAIN CONTAINER -->
+
+  <div class="container">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+  <ul>
+    <li><a href="#">Menu</a></li>
+    <li><a href="#">Add Task</a></li>
+    <li><a href="#">Modify Task</a></li>
+    <li><a href="#">Delete Task</a></li>
+    <li><a href="#">View Tasks</a></li>
+
+    <li>
+
+      <a href="#" onclick="showOverview()">
+
+        Overview
+
+      </a>
+
+    </li>
+
+  </ul>
+
+</div>
+
+<div
+  id="overviewSection"
+  class="overview-card"
+  style="display:none;">
+
+  <h2>Application Overview</h2>
+
+  <br>
+
+  <canvas id="taskChart"></canvas>
+
+</div>
+    <!-- CONTENT -->
+
+    <div class="content">
+
+      <div class="card">
+
+        <div class="top-header">
+
+  <h3>Task Details</h3>
+
+  <input
+    type="text"
+    id="searchInput"
+    placeholder="Search by ID, Name, Employee, Status..."
+    onkeyup="searchTasks()"
+    class="search-bar">
+
+</div>
+
+        <form>
+
+          <div class="task-form">
+
+    <div class="form-group">
+      <label>Task ID</label>
+
+      <input
+        type="text"
+        id="task_id"
+        placeholder="Enter Task ID">
+
+    </div>
+
+    <div class="form-group">
+      <label>Task Name</label>
+
+      <input
+        type="text"
+        id="task_name"
+        placeholder="Enter Task Name">
+
+    </div>
+
+    <div class="form-group">
+      <label>Assigned To</label>
+
+      <input
+        type="text"
+        id="assigned_to"
+        placeholder="Employee Name">
+
+    </div>
+
+    <div class="form-group">
+      <label>Status</label>
+
+      <select id="status">
+
+        <option>Pending</option>
+        <option>In Progress</option>
+        <option>Completed</option>
+
+      </select>
+
+    </div>
+    <div class="form-group">
+
+  <label>Progress</label>
+
+  <input
+    type="text"
+    id="progress"
+    placeholder="Enter Progress"
+    >
+
+</div>
+
+    <div class="form-group full-width">
+      <label>Description</label>
+
+      <textarea
+        id="description"
+        placeholder="Enter Task Description"></textarea>
+
+    </div>
+
+</div>
+
+          <!-- BUTTONS -->
+
+          <div class="btn-group">
+
+  <button
+    type="button"
+    class="btn add-btn"
+    onclick="addTask()">
+
+    Add Task
+
+  </button>
+
+    <button
+        type="button"
+        id="updateBtn"
+        class="btn modify-btn"
+        onclick="updateTask()">
+        
+    
+        Update Task
+
+</div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+function showMessage(message, type){
+
+    const messageBox =
+    document.getElementById("messageBox");
+
+    messageBox.innerText = message;
+
+    if(type === "success"){
+
+        messageBox.style.background = "#28a745";
+
+    }
+    else{
+
+        messageBox.style.background = "#dc3545";
+
+    }
+
+    messageBox.style.display = "block";
+
+    setTimeout(() => {
+
+        messageBox.style.display = "none";
+
+    }, 3000);
+
+}
+/* ADD TASK */
+
+async function addTask(){
+
+    const task_name =
+    document.getElementById("task_name").value;
+
+    const assigned_to =
+    document.getElementById("assigned_to").value;
+
+    const status =
+    document.getElementById("status").value;
+
+    const progress =
+    document.getElementById("progress").value;
+
+    const description =
+    document.getElementById("description").value;
+
+    const response = await fetch(
+
+        "http://localhost:3000/addTask",
+
+        {
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body: JSON.stringify({
+
+                task_name,
+                assigned_to,
+                status,
+                progress,
+                description
+
+            })
+
+        }
+
+    );
+
+    const data = await response.json();
+
+    showMessage("Task added successfully.", "success");
+
+}
+
+/* UPDATE TASK */
+
+async function updateTask(){
+
+    const id =
+    document.getElementById("task_id").value;
+
+    const task_name =
+    document.getElementById("task_name").value;
+
+    const assigned_to =
+    document.getElementById("assigned_to").value;
+
+    const status =
+    document.getElementById("status").value;
+
+    const progress =
+    document.getElementById("progress").value;
+
+    const description =
+    document.getElementById("description").value;
+
+
+    const response = await fetch(
+
+        `http://localhost:3000/updateTask/${id}`,
+
+        {
+
+            method:"PUT",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body: JSON.stringify({
+
+                task_name,
+                assigned_to,
+                status,
+                progress,
+                description
+
+            })
+
+        }
+
+    );
+
+    const data = await response.json();
+
+    showMessage("Task updated successfully.", "success");
+
+}
+
+
+/* VIEW TASKS */
+
+async function loadTasks(){
+
+    const response = await fetch(
+
+        "http://localhost:3000/tasks"
+
+    );
+
+    const tasks = await response.json();
+
+    let rows = "";
+
+    tasks.forEach((task) => {
+
+        rows += `
+
+        <tr>
+
+            <td>${task.task_id}</td>
+
+            <td>${task.task_name}</td>
+
+            <td>${task.assigned_to}</td>
+
+            <td>${task.status}</td>
+
+            <td>${task.progress}</td>
+
+            <td>${task.description}</td>
+
+
+            <td>
+
+                <button
+                class="table-edit-btn"
+                onclick="editTask(
+                    '${task.task_id}',
+                    '${task.task_name}',
+                    '${task.assigned_to}',
+                    '${task.status}',
+                    '${task.progress}',
+                    '${task.description}',
+                )">
+
+                Modify
+
+                </button>
+
+                <button
+                class="table-delete-btn"
+                onclick="deleteTaskById('${task.task_id}')">
+
+                Delete
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document.getElementById("taskTableBody")
+    .innerHTML = rows;
+
+}
+function editTask(id, name, assigned, status, progress, description){
+
+    document.getElementById("task_id").value = id;
+
+    document.getElementById("task_name").value = name;
+
+    document.getElementById("assigned_to").value = assigned;
+
+    document.getElementById("status").value = status;
+
+    document.getElementById("progress").value = progress;
+
+    document.getElementById("description").value = description;
+
+
+}
+
+
+/* DELETE TASK FROM TABLE */
+
+async function deleteTaskById(id){
+
+    const response = await fetch(
+
+        `http://localhost:3000/deleteTask/${id}`,
+
+        {
+            method:"DELETE"
+        }
+
+    );
+
+    const data = await response.json();
+
+    showMessage("Task deleted successfully.", "success");
+
+    loadTasks();
+
+}
+function searchTasks(){
+
+    let input =
+    document.getElementById("searchInput")
+    .value.toLowerCase();
+
+    let table =
+    document.getElementById("taskTableBody");
+
+    let rows =
+    table.getElementsByTagName("tr");
+
+    for(let i = 0; i < rows.length; i++){
+
+        let text =
+        rows[i].innerText.toLowerCase();
+
+        if(text.includes(input)){
+
+            rows[i].style.display = "";
+
+        }
+        else{
+
+            rows[i].style.display = "none";
+
+        }
+
+    }
+
+}
+let chartCreated = false;
+
+async function showOverview(){
+
+    const section =
+    document.getElementById("overviewSection");
+
+    section.style.display = "block";
+
+    const response = await fetch(
+
+        "http://localhost:3000/tasks"
+
+    );
+
+    const tasks = await response.json();
+
+    let pending = 0;
+    let progress = 0;
+    let completed = 0;
+
+    tasks.forEach((task) => {
+
+        if(task.status === "Pending"){
+
+            pending++;
+
+        }
+        else if(task.status === "In Progress"){
+
+            progress++;
+
+        }
+        else if(task.status === "Completed"){
+
+            completed++;
+
+        }
+
+    });
+
+    if(chartCreated){
+
+        return;
+
+    }
+
+    const ctx =
+    document.getElementById("taskChart");
+
+    new Chart(ctx, {
+
+        type:"pie",
+
+        data:{
+
+            labels:[
+                "Pending",
+                "In Progress",
+                "Completed"
+            ],
+
+            datasets:[{
+
+                data:[
+                    pending,
+                    progress,
+                    completed
+                ],
+
+                backgroundColor:[
+                    "#ffc107",
+                    "#17a2b8",
+                    "#28a745"
+                ]
+
+            }]
+
+        }
+
+    });
+
+    chartCreated = true;
+
+}
+function logout(){
+
+    window.location.href = "login.html";
+
+}
+/* AUTO LOAD TASKS */
+
+loadTasks();
+
+</script>
+<br>
+
+<h3>Task List</h3>
+
+</div>
+
+  <table border="1" width="100%" cellpadding="10">
+
+    <thead>
+
+      <tr>
+
+        <th>ID</th>
+        <th>Task Name</th>
+        <th>Assigned To</th>
+        <th>Status</th>
+        <th>Progress</th>
+        <th>Description</th>
+        
+        <th>Actions</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody id="taskTableBody">
+
+    </tbody>
+
+  </table>
+
+</div>
+<div id="messageBox" class="message-box"></div>
+</body>
+</html>

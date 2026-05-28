@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login Page</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body{
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background: linear-gradient(to right, #4facfe, #00f2fe);
+    }
+
+    .login-container{
+      width:350px;
+      background:white;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .login-container h2{
+      text-align:center;
+      margin-bottom:25px;
+      color:#333;
+    }
+
+    .input-group{
+      margin-bottom:20px;
+    }
+
+    .input-group label{
+      display:block;
+      margin-bottom:5px;
+      font-weight:bold;
+      color:#555;
+    }
+
+    .input-group input{
+      width:100%;
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:5px;
+      outline:none;
+    }
+
+    .login-btn{
+      width:100%;
+      padding:10px;
+      border:none;
+      border-radius:5px;
+      background:#4facfe;
+      color:white;
+      font-size:16px;
+      cursor:pointer;
+    }
+
+    .footer-text{
+      text-align:center;
+      margin-top:15px;
+      color:#666;
+      font-size:14px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="login-container">
+
+    <h2>Login</h2>
+
+    <!-- LOGIN FORM -->
+
+    <form id="loginForm">
+
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="username" placeholder="Enter Username" required>
+      </div>
+
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="password" placeholder="Enter Password" required>
+      </div>
+
+      <button type="submit" class="login-btn">
+        Login
+      </button>
+
+    </form>
+
+    <div class="footer-text">
+      Task Management System
+    </div>
+
+  </div>
+
+  <script>
+
+    document.getElementById("loginForm").addEventListener("submit", function(event){
+
+      event.preventDefault();
+
+      // GET VALUES
+
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+
+      // SIMPLE LOGIN VALIDATION
+
+      if(username === "admin" && password === "1234"){
+
+        // REDIRECT TO DASHBOARD
+
+        window.location.href = "dashboard.html";
+
+      }
+      else{
+
+        alert("Invalid Username or Password");
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
