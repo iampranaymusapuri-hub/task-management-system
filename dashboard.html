@@ -1165,6 +1165,7 @@ async function processImage(file){
         console.log(text);
 
         parseImageData(text);
+                
 
     }
     catch(error){
@@ -1179,9 +1180,7 @@ async function processImage(file){
     }
 
 }
-
-
-/* EXTRACT DETAILS */
+/***** EXTRACT + SAVE IMAGE DATA *****/
 
 function parseImageData(text){
 
@@ -1205,6 +1204,8 @@ function parseImageData(text){
 
     const property =
     cleanText.match(/Property[:\-]?\s*([A-Za-z0-9]+)/i);
+
+    /* DISPLAY TABLE */
 
     let row = `
 
@@ -1235,8 +1236,79 @@ function parseImageData(text){
     ).innerText =
     "Image processed successfully.";
 
+    /* SAVE TO DATABASE */
+
+    saveProduct(
+
+      article ? article[1] : "N/A",
+
+      colour ? colour[1] : "N/A",
+
+      mrp ? mrp[1] : 0,
+
+      wsp ? wsp[1] : 0,
+
+      fabric ? fabric[1] : "N/A",
+
+      property ? property[1] : "N/A"
+
+    );
+
 }
-let chartCreated = false;
+
+
+/***** SAVE PRODUCT API *****/
+
+async function saveProduct(
+    article,
+    colour,
+    mrp,
+    wsp,
+    fabric,
+    property
+){
+
+    try{
+
+        const response = await fetch(
+
+            "https://task-management-system-1-2kwi.onrender.com/saveProduct",
+
+            {
+
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body: JSON.stringify({
+
+                    article,
+                    colour,
+                    mrp,
+                    wsp,
+                    fabric,
+                    property
+
+                })
+
+            }
+
+        );
+
+        const data = await response.json();
+
+        console.log(data);
+
+    }
+    catch(error){
+
+        console.log(error);
+
+    }
+
+}let chartCreated = false;
 
 async function showOverview(){
 
