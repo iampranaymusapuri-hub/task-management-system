@@ -422,6 +422,57 @@ th, td{
   gap:20px;
 
 }
+.upload-area{
+
+  border:2px dashed #007bff;
+
+  border-radius:10px;
+
+  padding:40px;
+
+  text-align:center;
+
+  background:#f8fbff;
+
+  cursor:pointer;
+
+  transition:0.3s;
+
+}
+
+.upload-area:hover{
+
+  background:#eef5ff;
+
+}
+
+.upload-image-btn{
+
+  display:inline-block;
+
+  background:#007bff;
+
+  color:white;
+
+  padding:10px 20px;
+
+  border-radius:6px;
+
+  cursor:pointer;
+
+  margin-top:10px;
+
+}
+
+.paste-text{
+
+  margin-top:15px;
+
+  color:#666;
+
+  font-size:14px;
+
+}
   </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -507,11 +558,32 @@ th, td{
 
   <br>
 
+<div id="uploadArea" class="upload-area">
+
+  <p>Drag & Drop Image Here</p>
+
+  <p>OR</p>
+
+  <button
+    type="button"
+    class="upload-image-btn"
+    onclick="document.getElementById('imageUpload').click()">
+
+    Browse Files
+
+  </button>
+
   <input
     type="file"
     id="imageUpload"
-    accept="image/*">
+    accept="image/*"
+    style="display:none;">
 
+  <p class="paste-text">
+    You can also Copy-Paste image here
+  </p>
+
+</div>
   <br><br>
 
   <p id="uploadStatus"></p>
@@ -997,14 +1069,100 @@ function openImageUpload(){
     ).style.display = "block";
 
 }
+const uploadArea =
+document.getElementById("uploadArea");
+
+const imageUpload =
+document.getElementById("imageUpload");
+
+
+imageUpload.addEventListener(
+  "change",
+  function(e){
+
+    const file =
+    e.target.files[0];
+
+    processImage(file);
+
+});
+
+/* DRAG OVER */
+
+uploadArea.addEventListener("dragover", (e) => {
+
+    e.preventDefault();
+
+    uploadArea.style.background =
+    "#dbeafe";
+
+});
+
+
+/* DRAG LEAVE */
+
+uploadArea.addEventListener("dragleave", () => {
+
+    uploadArea.style.background =
+    "#f8fbff";
+
+});
+
+
+/* DROP IMAGE */
+
+uploadArea.addEventListener("drop", (e) => {
+
+    e.preventDefault();
+
+    uploadArea.style.background =
+    "#f8fbff";
+
+    const file =
+    e.dataTransfer.files[0];
+
+    processImage(file);
+
+});
+
+
+/* COPY-PASTE IMAGE */
+
+document.addEventListener("paste", (e) => {
+
+    const items =
+    e.clipboardData.items;
+
+    for(let item of items){
+
+        if(item.type.includes("image")){
+
+            const file =
+            item.getAsFile();
+
+            processImage(file);
+
+        }
+
+    }
+
+});
 
 
 /* IMAGE OCR SCAN */
 
 document.getElementById("imageUpload")
-.addEventListener("change", async function(e){
+.addEventListener("change", function(e){
 
-    const file = e.target.files[0];
+    const file =
+    e.target.files[0];
+
+    processImage(file);
+
+});
+
+
+async function processImage(file){
 
     if(!file){
 
@@ -1032,8 +1190,16 @@ document.getElementById("imageUpload")
 
     parseImageData(text);
 
-});
 
+/* AUTO REFRESH */
+
+setTimeout(() => {
+
+    location.reload();
+
+}, 3000);
+
+}
 
 /* EXTRACT DETAILS */
 
