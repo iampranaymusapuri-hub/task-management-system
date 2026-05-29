@@ -604,8 +604,8 @@ async function addTask(){
     document.getElementById("description").value;
 
     const response = await fetch(
-
-        "http://localhost:3000/addTask",
+"https://task-management-system-1-2kwi.onrender.com/addTask",
+        
 
         {
 
@@ -660,7 +660,7 @@ async function updateTask(){
 
     const response = await fetch(
 
-        `http://localhost:3000/updateTask/${id}`,
+        `https://task-management-system-1-2kwi.onrender.com/updateTask/${id}`,
 
         {
 
@@ -697,7 +697,7 @@ async function loadTasks(){
 
     const response = await fetch(
 
-        "http://localhost:3000/tasks"
+        "https://task-management-system-1-2kwi.onrender.com/tasks"
 
     );
 
@@ -785,7 +785,7 @@ async function deleteTaskById(id){
 
     const response = await fetch(
 
-        `http://localhost:3000/deleteTask/${id}`,
+        `https://task-management-system-1-2kwi.onrender.com/deleteTask/${id}`,
 
         {
             method:"DELETE"
@@ -842,7 +842,7 @@ async function showOverview(){
 
     const response = await fetch(
 
-        "http://localhost:3000/tasks"
+        "https://task-management-system-1-2kwi.onrender.com/tasks"
 
     );
 
