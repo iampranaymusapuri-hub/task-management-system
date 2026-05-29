@@ -562,20 +562,18 @@ th, td{
 
     <p>OR</p>
 
-    <button
-      type="button"
-      class="upload-image-btn"
-      onclick="document.getElementById('imageUpload').click()">
+    <label
+  for="imageUpload"
+  class="upload-image-btn">
 
-      Browse Files
+  Browse Files
 
-    </button>
-
-    <input
-      type="file"
-      id="imageUpload"
-      accept="image/*"
-      style="display:none;">
+</label>
+<input
+  type="file"
+  id="imageUpload"
+  accept="image/*"
+  style="display:none;">
 
     <p class="paste-text">
       You can also Copy-Paste image here
@@ -737,7 +735,7 @@ th, td{
         
     
         Update Task
-
+    </button>
 </div>
 
         </form>
@@ -754,6 +752,26 @@ th, td{
   </div>
 
   <script>
+  /* ELEMENTS */
+
+const uploadArea =
+document.getElementById("uploadArea");
+
+const imageUpload =
+document.getElementById("imageUpload"); 
+
+/* FILE SELECT */
+
+imageUpload.addEventListener(
+  "change",
+  function(e){
+
+    const file =
+    e.target.files[0];
+
+    processImage(file);
+
+});
 
 function showMessage(message, type){
 
@@ -782,31 +800,7 @@ function showMessage(message, type){
     }, 3000);
 
 }
-document.getElementById("loginForm")
-.addEventListener("submit", function(event){
 
-    event.preventDefault();
-
-    const username =
-    document.getElementById("username").value;
-
-    const password =
-    document.getElementById("password").value;
-
-    if(username === "admin" && password === "admin123"){
-
-        window.location.href = "dashboard.html";
-    }
-    else{
-
-        showLoginMessage(
-      "Invalid username or password. Please try again.",
-      "error"
-    );
-
-    }
-
-});
 function clearForm(){
 
     document.getElementById("task_id").value = "";
@@ -1078,30 +1072,6 @@ function openImageUpload(){
 
 }
 
-
-/* ELEMENTS */
-
-const uploadArea =
-document.getElementById("uploadArea");
-
-const imageUpload =
-document.getElementById("imageUpload");
-
-
-/* FILE SELECT */
-
-imageUpload.addEventListener(
-  "change",
-  function(e){
-
-    const file =
-    e.target.files[0];
-
-    processImage(file);
-
-});
-
-
 /* DRAG OVER */
 
 uploadArea.addEventListener("dragover", (e) => {
@@ -1356,6 +1326,8 @@ function logout(){
     window.location.href = "login.html";
 
 }
+
+
 /* AUTO LOAD TASKS */
 
 loadTasks();
