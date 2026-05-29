@@ -7,10 +7,10 @@ const cors = require("cors");
 
 const app = express();
 
+app.use(express.static(__dirname));
+
 app.use(bodyParser.json());
 app.use(cors());
-
-app.use(express.static(__dirname));
 
 /* MYSQL CONNECTION */
 
@@ -29,7 +29,6 @@ const db = mysql.createConnection({
     database:"sql12828515",
 
     port:"3306"
-
 
 });
 
@@ -240,8 +239,19 @@ app.delete("/deleteTask/:id", (req, res) => {
 
 /* SERVER */
 
-app.listen(3000, () => {
+const path = require("path");
 
-    console.log("Server Running on Port 3000");
+app.use(express.static(path.join(__dirname)));
+
+app.get("/", (req, res) => {
+
+    res.sendFile(path.join(__dirname, "login.html"));
+
+});
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+
+    console.log(`Server Running on Port ${PORT}`);
 
 });
