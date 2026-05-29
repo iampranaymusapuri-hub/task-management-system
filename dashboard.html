@@ -550,7 +550,7 @@ th, td{
 <div
   id="uploadSection"
   class="overview-card"
-  style="display:none;">
+  style="display:block;">
 
   <h2>Upload Product Image</h2>
 
@@ -628,7 +628,10 @@ th, td{
 </div>
     <!-- CONTENT -->
 
-    <div class="content">
+    <div
+  class="content"
+  id="mainContent"
+  style="display:none;">
 
       <div class="card">
 
@@ -1312,10 +1315,17 @@ async function saveProduct(
 
 async function showOverview(){
 
-    const section =
-    document.getElementById("overviewSection");
+    /* SHOW OVERVIEW */
 
-    section.style.display = "block";
+    document.getElementById(
+      "overviewSection"
+    ).style.display = "block";
+
+    /* SHOW TASK CONTENT */
+
+    document.getElementById(
+      "mainContent"
+    ).style.display = "block";
 
     const response = await fetch(
 
