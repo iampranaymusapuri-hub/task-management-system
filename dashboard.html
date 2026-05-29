@@ -545,11 +545,9 @@ th, td{
 
 </div>
 
+<!-- IMAGE UPLOAD SECTION -->
+
 <div
-  id="overviewSection"
-  class="overview-card"
-  style="display:none;">
-  <div
   id="uploadSection"
   class="overview-card"
   style="display:none;">
@@ -558,32 +556,33 @@ th, td{
 
   <br>
 
-<div id="uploadArea" class="upload-area">
+  <div id="uploadArea" class="upload-area">
 
-  <p>Drag & Drop Image Here</p>
+    <p>Drag & Drop Image Here</p>
 
-  <p>OR</p>
+    <p>OR</p>
 
-  <button
-    type="button"
-    class="upload-image-btn"
-    onclick="document.getElementById('imageUpload').click()">
+    <button
+      type="button"
+      class="upload-image-btn"
+      onclick="document.getElementById('imageUpload').click()">
 
-    Browse Files
+      Browse Files
 
-  </button>
+    </button>
 
-  <input
-    type="file"
-    id="imageUpload"
-    accept="image/*"
-    style="display:none;">
+    <input
+      type="file"
+      id="imageUpload"
+      accept="image/*"
+      style="display:none;">
 
-  <p class="paste-text">
-    You can also Copy-Paste image here
-  </p>
+    <p class="paste-text">
+      You can also Copy-Paste image here
+    </p>
 
-</div>
+  </div>
+
   <br><br>
 
   <p id="uploadStatus"></p>
@@ -614,6 +613,13 @@ th, td{
   </table>
 
 </div>
+
+<!-- OVERVIEW SECTION -->
+
+<div
+  id="overviewSection"
+  class="overview-card"
+  style="display:none;">
 
   <h2>Application Overview</h2>
 
@@ -1062,6 +1068,8 @@ function searchTasks(){
     }
 
 }
+/* OPEN IMAGE SECTION */
+
 function openImageUpload(){
 
     document.getElementById(
@@ -1069,12 +1077,18 @@ function openImageUpload(){
     ).style.display = "block";
 
 }
+
+
+/* ELEMENTS */
+
 const uploadArea =
 document.getElementById("uploadArea");
 
 const imageUpload =
 document.getElementById("imageUpload");
 
+
+/* FILE SELECT */
 
 imageUpload.addEventListener(
   "change",
@@ -1086,6 +1100,7 @@ imageUpload.addEventListener(
     processImage(file);
 
 });
+
 
 /* DRAG OVER */
 
@@ -1149,18 +1164,7 @@ document.addEventListener("paste", (e) => {
 });
 
 
-/* IMAGE OCR SCAN */
-
-document.getElementById("imageUpload")
-.addEventListener("change", function(e){
-
-    const file =
-    e.target.files[0];
-
-    processImage(file);
-
-});
-
+/* OCR PROCESS */
 
 async function processImage(file){
 
@@ -1175,31 +1179,37 @@ async function processImage(file){
     ).innerText =
     "Scanning image... Please wait.";
 
-    const result =
-    await Tesseract.recognize(
+    try{
 
-        file,
-        "eng"
+        const result =
+        await Tesseract.recognize(
 
-    );
+            file,
+            "eng"
 
-    const text =
-    result.data.text;
+        );
 
-    console.log(text);
+        const text =
+        result.data.text;
 
-    parseImageData(text);
+        console.log(text);
 
+        parseImageData(text);
 
-/* AUTO REFRESH */
+    }
+    catch(error){
 
-setTimeout(() => {
+        console.log(error);
 
-    location.reload();
+        document.getElementById(
+          "uploadStatus"
+        ).innerText =
+        "Error processing image.";
 
-}, 3000);
+    }
 
 }
+
 
 /* EXTRACT DETAILS */
 
