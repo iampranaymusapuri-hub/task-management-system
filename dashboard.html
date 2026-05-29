@@ -11,7 +11,7 @@
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", sans-serif;
     }
 
     body{
@@ -31,8 +31,22 @@
     }
 
     .header h2{
-      font-size:24px;
-    }
+    font-family: "Segoe UI Semibold", "Segoe UI", sans-serif;
+    font-size:28px;
+    font-weight:600;
+}
+button,
+input,
+textarea,
+select,
+p,
+label,
+td,
+th,
+.sidebar ul li a{
+    font-family:"Segoe UI", sans-serif;
+    font-weight:400;
+}
 
     .dashboard-logo{
   width:45px;
@@ -42,6 +56,17 @@
   border-radius:50%;
   padding:5px;
 }
+.logo {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.title {
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 12px;
+}
+
     .logout-btn{
       background:white;
       color:#007bff;
@@ -378,9 +403,9 @@ th, td{
 
   <div class="header-left">
 
-    <img src="logo.png" class="dashboard-logo">
+    <img src="logo.png" class="dashboard-logo logo">
 
-    <h2>Task Management System</h2>
+    <h2 class="tittle">Task Management System</h2>
 
   </div>
 
