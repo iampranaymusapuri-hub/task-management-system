@@ -236,6 +236,62 @@ app.delete("/deleteTask/:id", (req, res) => {
     });
 
 });
+/* SAVE PRODUCT DETAILS */
+
+app.post("/saveProduct", (req, res) => {
+
+    const {
+        article,
+        colour,
+        mrp,
+        wsp,
+        fabric,
+        property
+    } = req.body;
+
+    const sql = `
+    INSERT INTO product_details
+    (article, colour, mrp, wsp, fabric, property)
+    VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+            article,
+            colour,
+            mrp,
+            wsp,
+            fabric,
+            property
+        ],
+
+        (err, result) => {
+
+            if(err){
+
+                console.log(err);
+
+                res.status(500).json({
+                    message:"Database Error"
+                });
+
+            }
+            else{
+
+                res.json({
+                    message:"Product saved successfully"
+                });
+
+            }
+
+        }
+
+    );
+
+});
 
 /* SERVER */
 
