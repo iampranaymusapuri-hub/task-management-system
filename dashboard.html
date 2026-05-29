@@ -13,6 +13,33 @@
       box-sizing:border-box;
       font-family: "Segoe UI", sans-serif;
     }
+    .login-message{
+
+  margin-top:15px;
+  padding:12px;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:500;
+  display:none;
+  text-align:center;
+
+}
+
+.login-message.error{
+
+  background:#f8d7da;
+  color:#721c24;
+  border:1px solid #f5c6cb;
+
+}
+
+.login-message.success{
+
+  background:#d4edda;
+  color:#155724;
+  border:1px solid #c3e6cb;
+
+}
 
     body{
       background:#f4f6f9;
@@ -22,13 +49,18 @@
 
     .header{
       width:100%;
-      background:#007bff;
+      background:#4aa1fd;
       color:white;
       padding:15px 30px;
       display:flex;
       justify-content:space-between;
       align-items:center;
     }
+    .header-left{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
 
     .header h2{
     font-family: "Segoe UI Semibold", "Segoe UI", sans-serif;
@@ -393,29 +425,34 @@ th, td{
   </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 </head>
 
 <body>
 
   <!-- HEADER -->
 
-  <div class="header">
+<div class="header">
 
   <div class="header-left">
 
+    <div class="menu-icon" onclick="toggleSidebar()">
+      ☰
+    </div>
+
     <img src="logo.png" class="dashboard-logo logo">
 
-    <h2 class="tittle">Task Management System</h2>
+    <h2 class="title">Task Management System</h2>
 
   </div>
 
   <button
-  class="logout-btn"
-  onclick="logout()">
+    class="logout-btn"
+    onclick="logout()">
 
-  Logout
+    Logout
 
-</button>
+  </button>
 
 </div>
 
@@ -433,6 +470,15 @@ th, td{
     <li><a href="#">Modify Task</a></li>
     <li><a href="#">Delete Task</a></li>
     <li><a href="#">View Tasks</a></li>
+      <li>
+
+    <a href="#" onclick="openImageUpload()">
+
+      Upload Image
+
+    </a>
+
+  </li>
 
     <li>
 
@@ -452,6 +498,50 @@ th, td{
   id="overviewSection"
   class="overview-card"
   style="display:none;">
+  <div
+  id="uploadSection"
+  class="overview-card"
+  style="display:none;">
+
+  <h2>Upload Product Image</h2>
+
+  <br>
+
+  <input
+    type="file"
+    id="imageUpload"
+    accept="image/*">
+
+  <br><br>
+
+  <p id="uploadStatus"></p>
+
+  <br>
+
+  <table border="1" width="100%" cellpadding="10">
+
+    <thead>
+
+      <tr>
+
+        <th>Article</th>
+        <th>Colour</th>
+        <th>MRP</th>
+        <th>WSP</th>
+        <th>Fabric</th>
+        <th>Property</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody id="imageTableBody">
+
+    </tbody>
+
+  </table>
+
+</div>
 
   <h2>Application Overview</h2>
 
@@ -573,6 +663,11 @@ th, td{
 </div>
 
         </form>
+        <div id="loginMessage" class="login-message"></div>
+
+<div class="footer-text">
+  Task Management System
+</div>
 
       </div>
 
@@ -607,6 +702,41 @@ function showMessage(message, type){
         messageBox.style.display = "none";
 
     }, 3000);
+
+}
+document.getElementById("loginForm")
+.addEventListener("submit", function(event){
+
+    event.preventDefault();
+
+    const username =
+    document.getElementById("username").value;
+
+    const password =
+    document.getElementById("password").value;
+
+    if(username === "admin" && password === "admin123"){
+
+        window.location.href = "dashboard.html";
+    }
+    else{
+
+        showLoginMessage(
+      "Invalid username or password. Please try again.",
+      "error"
+    );
+
+    }
+
+});
+function clearForm(){
+
+    document.getElementById("task_id").value = "";
+    document.getElementById("task_name").value = "";
+    document.getElementById("assigned_to").value = "";
+    document.getElementById("status").value = "Pending";
+    document.getElementById("progress").value = "";
+    document.getElementById("description").value = "";
 
 }
 /* ADD TASK */
@@ -657,6 +787,8 @@ async function addTask(){
     const data = await response.json();
 
     showMessage("Task added successfully.", "success");
+    loadTasks();
+    clearForm();
 
 }
 
@@ -712,7 +844,8 @@ async function updateTask(){
     const data = await response.json();
 
     showMessage("Task updated successfully.", "success");
-
+    loadTasks();
+    clearForm();
 }
 
 
@@ -823,6 +956,7 @@ async function deleteTaskById(id){
     showMessage("Task deleted successfully.", "success");
 
     loadTasks();
+    clearForm();
 
 }
 function searchTasks(){
@@ -854,6 +988,106 @@ function searchTasks(){
         }
 
     }
+
+}
+function openImageUpload(){
+
+    document.getElementById(
+      "uploadSection"
+    ).style.display = "block";
+
+}
+
+
+/* IMAGE OCR SCAN */
+
+document.getElementById("imageUpload")
+.addEventListener("change", async function(e){
+
+    const file = e.target.files[0];
+
+    if(!file){
+
+        return;
+
+    }
+
+    document.getElementById(
+      "uploadStatus"
+    ).innerText =
+    "Scanning image... Please wait.";
+
+    const result =
+    await Tesseract.recognize(
+
+        file,
+        "eng"
+
+    );
+
+    const text =
+    result.data.text;
+
+    console.log(text);
+
+    parseImageData(text);
+
+});
+
+
+/* EXTRACT DETAILS */
+
+function parseImageData(text){
+
+    const cleanText =
+    text.replace(/\s+/g, " ");
+
+    const article =
+    cleanText.match(/Article[:\-]?\s*(\w+)/i);
+
+    const colour =
+    cleanText.match(/Col(?:ou)?r[:\-]?\s*([A-Za-z]+)/i);
+
+    const mrp =
+    cleanText.match(/MRP[:\-]?\s*(\d+)/i);
+
+    const wsp =
+    cleanText.match(/WSP[:\-]?\s*(\d+)/i);
+
+    const fabric =
+    cleanText.match(/Fabric[:\-]?\s*([A-Za-z]+)/i);
+
+    const property =
+    cleanText.match(/Property[:\-]?\s*([A-Za-z0-9]+)/i);
+
+    let row = `
+
+    <tr>
+
+      <td>${article ? article[1] : "N/A"}</td>
+
+      <td>${colour ? colour[1] : "N/A"}</td>
+
+      <td>${mrp ? mrp[1] : "N/A"}</td>
+
+      <td>${wsp ? wsp[1] : "N/A"}</td>
+
+      <td>${fabric ? fabric[1] : "N/A"}</td>
+
+      <td>${property ? property[1] : "N/A"}</td>
+
+    </tr>
+
+    `;
+
+    document.getElementById(
+      "imageTableBody"
+    ).innerHTML = row;
+
+    document.getElementById(
+      "uploadStatus"
+    ).innerText =
+    "Image processed successfully.";
 
 }
 let chartCreated = false;
