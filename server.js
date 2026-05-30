@@ -133,9 +133,9 @@ app.get("/tasks", (req, res) => {
     });
 
 });
-/* GET ALL PRODUCTS */
+/* GET ALL PRODUCT_DETAILS */
 
-app.get("/products_details", (req, res) => {
+app.get("/product_details", (req, res) => {
 
     const sql = `
         SELECT
@@ -145,7 +145,7 @@ app.get("/products_details", (req, res) => {
             wsp,
             fabric,
             property
-        FROM products_details
+        FROM product_details
         ORDER BY id DESC
     `;
 
