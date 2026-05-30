@@ -133,6 +133,34 @@ app.get("/tasks", (req, res) => {
     });
 
 });
+/* GET ALL PRODUCTS */
+
+app.get("/products_details", (req, res) => {
+
+    const sql = `
+        SELECT
+            article,
+            colour,
+            mrp,
+            wsp,
+            fabric,
+            property
+        FROM products_details
+        ORDER BY id DESC
+    `;
+
+    db.query(sql, (err, result) => {
+
+        if(err){
+            console.log(err);
+            return res.status(500).json(err);
+        }
+
+        res.json(result);
+
+    });
+
+});
 
 /* ===========================
    MODIFY TASK
@@ -238,7 +266,7 @@ app.delete("/deleteTask/:id", (req, res) => {
 });
 /* SAVE PRODUCT DETAILS */
 
-app.post("/saveProduct", (req, res) => {
+app.post("/saveProduct_details", (req, res) => {
 
     const {
         article,
@@ -282,7 +310,7 @@ app.post("/saveProduct", (req, res) => {
             else{
 
                 res.json({
-                    message:"Product saved successfully"
+                    message:"Product_details saved successfully"
                 });
 
             }
