@@ -1242,6 +1242,22 @@ async function parseImageData(text){
     const fabric = cleanText.match(/Fabric[:\-]?\s*([A-Za-z]+)/i);
     const property = cleanText.match(/Property[:\-]?\s*([A-Za-z0-9]+)/i);
 
+    let row = `
+        <tr>
+            <td>${article ? article[1] : "N/A"}</td>
+            <td>${colour ? colour[1] : "N/A"}</td>
+            <td>${mrp ? mrp[1] : "N/A"}</td>
+            <td>${wsp ? wsp[1] : "N/A"}</td>
+            <td>${fabric ? fabric[1] : "N/A"}</td>
+            <td>${property ? property[1] : "N/A"}</td>
+        </tr>
+    `;
+
+    document.getElementById("imageTableBody").innerHTML = row;
+
+    document.getElementById("uploadStatus").innerText =
+        "Image processed successfully.";
+
     await saveProduct_details(
         article ? article[1] : "N/A",
         colour ? colour[1] : "N/A",
@@ -1250,6 +1266,7 @@ async function parseImageData(text){
         fabric ? fabric[1] : "N/A",
         property ? property[1] : "N/A"
     );
+    await loadProduct_details();
 }
 
 /***** SAVE PRODUCT API *****/
@@ -1319,16 +1336,16 @@ showMessage(
 
 async function showOverview(){
 
-    /* HIDE UPLOAD IMAGE SECTION */
+    // Hide Upload Section
     document.getElementById("uploadSection").style.display = "none";
 
-    /* HIDE PRODUCT TABLE */
-    document.getElementById("productcontainer").style.display = "none";
+    // Hide Product Table
+    document.getElementById("productContainer").style.display = "none";
 
-    /* SHOW OVERVIEW */
+    // Show Overview Chart
     document.getElementById("overviewSection").style.display = "block";
 
-    /* SHOW TASK MANAGEMENT CONTENT */
+    // Show Task Management Area
     document.getElementById("mainContent").style.display = "block";
 
     const response = await fetch(
@@ -1364,7 +1381,7 @@ async function showOverview(){
         data:{
             labels:["Pending","In Progress","Completed"],
             datasets:[{
-                data:[pending,progress,completed],
+                data:[pending, progress, completed],
                 backgroundColor:[
                     "#ffc107",
                     "#17a2b8",
@@ -1384,18 +1401,34 @@ function logout(){
 
 function showAddTask(){
 
+    document.getElementById("uploadSection").style.display = "none";
+    document.getElementById("productContainer").style.display = "none";
+    document.getElementById("overviewSection").style.display = "none";
+
+    document.getElementById("mainContent").style.display = "block";
+
     document.getElementById("pageTitle").innerHTML =
     "Please Enter Task Details";
-
 }
 function showModifyTask(){
 
+    document.getElementById("uploadSection").style.display = "none";
+    document.getElementById("productContainer").style.display = "none";
+    document.getElementById("overviewSection").style.display = "none";
+
+    document.getElementById("mainContent").style.display = "block";
+
     document.getElementById("pageTitle").innerHTML =
     "Please Select Task";
-
 }
 
 function showDeleteTask(){
+
+    document.getElementById("uploadSection").style.display = "none";
+    document.getElementById("productContainer").style.display = "none";
+    document.getElementById("overviewSection").style.display = "none";
+
+    document.getElementById("mainContent").style.display = "block";
 
     document.getElementById("pageTitle").innerHTML =
     "Please Select Task";
@@ -1404,9 +1437,14 @@ function showDeleteTask(){
 
 function showViewTasks(){
 
+    document.getElementById("uploadSection").style.display = "none";
+    document.getElementById("productContainer").style.display = "none";
+    document.getElementById("overviewSection").style.display = "none";
+
+    document.getElementById("mainContent").style.display = "block";
+
     document.getElementById("pageTitle").innerHTML =
     "Task List";
-
 }
 async function loadProduct_details(){
 
