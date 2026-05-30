@@ -1051,7 +1051,14 @@ function editTask(id, name, assigned, status, progress, description){
 
     document.getElementById("description").value = description;
 
+ // Move cursor to Task Details section
+    document.querySelector(".card").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
 
+    // Focus Task Name field
+    document.getElementById("task_name").focus();
 }
 
 
